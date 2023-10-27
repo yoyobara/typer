@@ -1,3 +1,14 @@
+use ncurses:: {
+    initscr, addstr, refresh, getch, endwin
+};
+
 fn main() {
-    println!("Hello, world!");
+    initscr();
+
+    addstr("hello world!");
+
+    refresh();
+    getch();
+
+    endwin();
 }
