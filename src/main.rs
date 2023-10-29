@@ -4,7 +4,6 @@ const NORMAL_TEXT: i16 = 1;
 const GREEN_TEXT: i16 = 2;
 const RED_TEXT: i16 = 3;
 
-
 /*
  * kinda initializes the curses screen, colors, etc
  */
@@ -42,5 +41,7 @@ fn main() {
 
     getch();
 
+    delwin(input_window);
+    delwin(text_window);
     endwin();
 }
