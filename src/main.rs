@@ -1,3 +1,5 @@
+mod multiline;
+
 use ncurses::*;
 
 const NORMAL_TEXT: i16 = 1;
@@ -35,10 +37,18 @@ fn initialize_windows() -> (WINDOW, WINDOW) {
     (input_window, text_window)
 }
 
+fn load_text(text_window: WINDOW) {
+    let line_length = (COLS() - 2) as usize; // border duh
+
+    wrefresh(text_window);
+}
+
 fn main() {
     init();
     let (input_window, text_window) = initialize_windows();
 
+    getch();
+    load_text(text_window);
     getch();
 
     delwin(input_window);
