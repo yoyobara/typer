@@ -13,6 +13,7 @@ const RED_TEXT: i16 = 3;
 fn init() {
     initscr();
     curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
+    noecho();
 
     start_color();
     init_pair(NORMAL_TEXT, COLOR_WHITE, COLOR_BLACK);
