@@ -17,7 +17,7 @@ impl MultiLine {
 
         let mut sc = ScreenChar {character: '?', position: (0, 0), color: NORMAL_TEXT};
         for word in text.split(" ") {
-            if sc.position.1 + word.len() as i32 + 1 >= line_length {
+            if sc.position.1 + word.len() as i32 >= line_length {
                 // next line
                 sc.position.1 = 0;
                 sc.position.0 += 1;

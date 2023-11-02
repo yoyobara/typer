@@ -55,7 +55,9 @@ fn main() {
 
     for i in 0..m.len() {
         let sc = m.get(i);
-        let (y, x) = (sc.position.0 + 1, sc.position.1 + 1);
+        let (y, x) = sc.position;
+
+        attron(COLOR_PAIR(sc.color));
         mvwaddch(text_window, y + 1, x + 1, sc.character as u32);
     }
     wrefresh(text_window);
