@@ -58,7 +58,7 @@ fn main() {
         let sc = m.get(i);
         let (y, x) = sc.position;
 
-        attron(COLOR_PAIR(sc.color));
+        wattron(text_window, COLOR_PAIR(sc.color));
         mvwaddch(text_window, y + 1, x + 1, sc.character as u32);
     }
     wrefresh(text_window);
