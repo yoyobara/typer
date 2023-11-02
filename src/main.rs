@@ -1,6 +1,7 @@
 mod multiline;
 
 use ncurses::*;
+use multiline::MultiLine;
 
 const NORMAL_TEXT: i16 = 1;
 const GREEN_TEXT: i16 = 2;
@@ -37,10 +38,12 @@ fn initialize_windows() -> (WINDOW, WINDOW) {
     (input_window, text_window)
 }
 
-fn load_text(text_window: WINDOW) {
-    let line_length = (COLS() - 2) as usize; // border duh
+fn load_text() -> MultiLine {
+    let line_length = COLS() - 2; // border duh
+    let text = "hello world my name is yotam and I love cookies I work at nistec and I dont know what am I doing with my life.".to_string();
 
-    wrefresh(text_window);
+    let m = MultiLine::new(text, line_length);
+    m
 }
 
 fn main() {
@@ -48,7 +51,15 @@ fn main() {
     let (input_window, text_window) = initialize_windows();
 
     getch();
-    load_text(text_window);
+    let m = load_text();
+
+    for i in 0..m.len() {
+        let sc = m.get(i);
+        let (y, x) = (sc.position.0 + 1, sc.position.1 + 1);
+        mvwaddch(text_window, y + 1, x + 1, sc.character as u32);
+    }
+    wrefresh(text_window);
+
     getch();
 
     delwin(input_window);
