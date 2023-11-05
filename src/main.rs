@@ -14,6 +14,7 @@ fn init() {
     initscr();
     curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
     noecho();
+    keypad(stdscr(), true);
 
     start_color();
     init_pair(NORMAL_TEXT, COLOR_WHITE, COLOR_BLACK);
@@ -49,12 +50,19 @@ fn load_multiline() -> MultiLine {
 
 fn main() {
     init();
-    let (input_window, text_window) = initialize_windows();
+    let (_input_window, text_window) = initialize_windows();
+
     let multiline = load_multiline();
+    let multiline_index = 0;
 
-    getch();
+    loop {
+        let input_char = getch();
+        if input_char == ncurses::KEY_F1 {
+            break;
+        }
+    }
 
-    delwin(input_window);
+    delwin(_input_window);
     delwin(text_window);
     endwin();
 }
