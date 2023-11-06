@@ -60,6 +60,8 @@ fn main() {
         if input_char == ncurses::KEY_F1 {
             break;
         }
+        
+        println!("{}", input_char);
     }
 
     delwin(_input_window);

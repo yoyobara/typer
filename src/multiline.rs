@@ -1,6 +1,6 @@
 #[derive(Copy, Clone)]
 pub struct ScreenChar {
-    pub character: char,
+    pub character: u32,
     pub position: (i32, i32),
     pub color: i16, // color pair number
 }
@@ -13,7 +13,7 @@ impl MultiLine {
     pub fn new(text: String, line_length: i32) -> MultiLine {
         let mut v: Vec<ScreenChar> = Vec::with_capacity(text.chars().count());
 
-        let mut sc = ScreenChar {character: '?', position: (0, 0), color: 3};
+        let mut sc = ScreenChar {character: 0, position: (0, 0), color: 3};
         for word in text.split(" ") {
             if sc.position.1 + word.len() as i32 >= line_length {
                 // next line
@@ -23,7 +23,7 @@ impl MultiLine {
 
             // do as usual
             for ch in word.chars().chain(Some(' ').into_iter()) {
-                sc.character = ch;
+                sc.character = ch.into();
                 v.push(sc);
                 sc.position.1 += 1;
             }
