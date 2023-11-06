@@ -56,12 +56,24 @@ fn main() {
     let multiline_index = 0;
 
     loop {
-        let input_char = getch();
-        if input_char == ncurses::KEY_F1 {
-            break;
+
+        match getch() {
+
+            // f1 or esc
+            KEY_F1 | 27 => {
+                break;
+            }
+
+            // whitespace
+            32 => {
+            }
+            
+            // rest of characters
+            _ => {
+
+            }
         }
-        
-        println!("{}", input_char);
+
     }
 
     delwin(_input_window);
