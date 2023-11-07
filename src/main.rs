@@ -77,12 +77,11 @@ fn draw(m: &MultiLine, multiline_index: usize, input_queue: &CircularQueue<u32>,
 fn main() {
     init();
     let (input_window, text_window) = initialize_windows();
-    let line_length: i32 = COLS() - 2;
 
-    let mut multiline = load_multiline(line_length);
+    let mut multiline = load_multiline(getmaxx(text_window) - 2);
     let mut multiline_index = 0;
 
-    let mut input_queue: CircularQueue<u32> = CircularQueue::with_capacity(line_length as usize);
+    let mut input_queue: CircularQueue<u32> = CircularQueue::with_capacity((getmaxx(input_window) - 2) as usize);
 
     let mut finished = false;
 
