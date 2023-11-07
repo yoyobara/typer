@@ -1,3 +1,5 @@
+use crate::NORMAL_TEXT;
+
 #[derive(Copy, Clone)]
 pub struct ScreenChar {
     pub character: u32,
@@ -13,7 +15,7 @@ impl MultiLine {
     pub fn new(text: String, line_length: i32) -> MultiLine {
         let mut v: Vec<ScreenChar> = Vec::with_capacity(text.chars().count());
 
-        let mut sc = ScreenChar {character: 0, position: (0, 0), color: 3};
+        let mut sc = ScreenChar {character: 0, position: (0, 0), color: NORMAL_TEXT};
         for word in text.split(" ") {
             if sc.position.1 + word.len() as i32 >= line_length {
                 // next line

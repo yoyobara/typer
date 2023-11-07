@@ -48,13 +48,23 @@ fn load_multiline() -> MultiLine {
     m
 }
 
+fn draw(m: &MultiLine, win: WINDOW) {
+    for i in 0..m.len() {
+        let sc = m.get(i);
+        wattron(win, COLOR_PAIR(sc.color));
+        mvwaddch(win, 1+sc.position.0, 1+sc.position.1, sc.character);
+    }
+    wrefresh(win);
+}
+
 fn main() {
     init();
     let (_input_window, text_window) = initialize_windows();
 
-    let multiline = load_multiline();
-    let multiline_index = 0;
+    let mut multiline = load_multiline();
+    let mut multiline_index = 0;
 
+    draw(&multiline, text_window);
     loop {
 
         match getch() {
@@ -65,7 +75,12 @@ fn main() {
             }
             
             // rest of characters
-            _ => {
+            ch => {
+                let screen_char = multiline.get_mut(multiline_index);
+                screen_char.color = if ch as u32 == screen_char.character {GREEN_TEXT} else {RED_TEXT};
+
+                multiline_index += 1;
+                draw(&multiline, text_window);
             }
         }
 
