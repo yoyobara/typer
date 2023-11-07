@@ -66,6 +66,7 @@ fn main() {
 
     let mut multiline = load_multiline();
     let mut multiline_index = 0;
+    let mut finished = false;
 
     draw(&multiline, text_window);
     loop {
@@ -91,9 +92,18 @@ fn main() {
             }
         }
         draw(&multiline, text_window);
+
+        if multiline_index == multiline.len() - 1 { // last word has extra space in it 
+            finished = true;
+            break;
+        }
     }
 
     delwin(_input_window);
     delwin(text_window);
     endwin();
+    
+    if finished {
+        println!("SUCCESS!!");
+    }
 }
