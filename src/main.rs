@@ -79,8 +79,10 @@ fn main() {
             }
 
             KEY_BACKSPACE => {
-                multiline_index -= 1;
-                multiline.get_mut(multiline_index).color = NORMAL_TEXT;
+                if multiline_index != 0 {
+                    multiline_index -= 1;
+                    multiline.get_mut(multiline_index).color = NORMAL_TEXT;
+                }
             }
             
             // rest of characters
@@ -89,14 +91,14 @@ fn main() {
                 screen_char.color = if ch as u32 == screen_char.character {GREEN_TEXT} else {RED_TEXT};
 
                 multiline_index += 1;
+
+                if multiline_index == multiline.len() {
+                    finished = true;   
+                }
             }
         }
         draw(&multiline, text_window);
-
-        if multiline_index == multiline.len() - 1 { // last word has extra space in it 
-            finished = true;
-            break;
-        }
+        if finished {break;};
     }
 
     delwin(_input_window);

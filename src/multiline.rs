@@ -31,6 +31,8 @@ impl MultiLine {
             }
         }
 
+        v.pop(); // extra word has extra last whitespace
+
         MultiLine { characters: v }
     }
 
