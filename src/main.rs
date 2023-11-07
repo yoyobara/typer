@@ -32,7 +32,10 @@ fn initialize_windows() -> (WINDOW, WINDOW) {
     let text_window = newwin(LINES() - 3, COLS(), 3, 0);
 
     wborder(input_window, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    wattron(text_window, COLOR_PAIR(COLOR_GREEN));
     wborder(text_window, 0, 0, 0, 0, 0, 0, 0, 0);
+    wattroff(text_window, COLOR_PAIR(COLOR_GREEN));
 
     wrefresh(input_window);
     wrefresh(text_window);
@@ -73,6 +76,11 @@ fn main() {
             KEY_F1 | 27 => {
                 break;
             }
+
+            KEY_BACKSPACE => {
+                multiline_index -= 1;
+                multiline.get_mut(multiline_index).color = NORMAL_TEXT;
+            }
             
             // rest of characters
             ch => {
@@ -80,10 +88,9 @@ fn main() {
                 screen_char.color = if ch as u32 == screen_char.character {GREEN_TEXT} else {RED_TEXT};
 
                 multiline_index += 1;
-                draw(&multiline, text_window);
             }
         }
-
+        draw(&multiline, text_window);
     }
 
     delwin(_input_window);
