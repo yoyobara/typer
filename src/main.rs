@@ -53,23 +53,30 @@ fn load_multiline(line_length: i32) -> MultiLine {
     m
 }
 
-fn draw(m: &MultiLine, multiline_index: usize, win: WINDOW) {
+fn draw(m: &MultiLine, multiline_index: usize, input_queue: &CircularQueue<u32>, text_window: WINDOW, input_window: WINDOW) {
 
     // draw characters
     for i in 0..m.len() {
         let sc = m.get(i);
 
-        wattron(win, COLOR_PAIR(if i == multiline_index {HIGHLIGHTED_NORMAL_TEXT} else {sc.color}));
+        wattron(text_window, COLOR_PAIR(
+            if i == multiline_index {HIGHLIGHTED_NORMAL_TEXT} else {sc.color})
+        );
 
-        mvwaddch(win, 1+sc.position.0, 1+sc.position.1, sc.character);
+        mvwaddch(text_window, 1+sc.position.0, 1+sc.position.1, sc.character);
     }
+    wrefresh(text_window);
 
-    wrefresh(win);
+    // draw input window
+    for (i, ch) in input_queue.iter().rev().enumerate() {
+        mvwaddch(input_window, 1, 1+i as i32, *ch);
+    }
+    wrefresh(input_window);
 }
 
 fn main() {
     init();
-    let (_input_window, text_window) = initialize_windows();
+    let (input_window, text_window) = initialize_windows();
     let line_length: i32 = COLS() - 2;
 
     let mut multiline = load_multiline(line_length);
@@ -79,7 +86,7 @@ fn main() {
 
     let mut finished = false;
 
-    draw(&multiline, multiline_index, text_window);
+    draw(&multiline, multiline_index, &input_queue, text_window, input_window);
     loop {
 
         match getch() {
@@ -103,16 +110,20 @@ fn main() {
 
                 multiline_index += 1;
 
+                // add to input queue
+                input_queue.push(ch as u32);
+
                 if multiline_index == multiline.len() {
                     finished = true;   
                 }
+
             }
         }
-        draw(&multiline, multiline_index, text_window);
+        draw(&multiline, multiline_index, &input_queue, text_window, input_window);
         if finished {break;};
     }
 
-    delwin(_input_window);
+    delwin(input_window);
     delwin(text_window);
     endwin();
     
