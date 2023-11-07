@@ -1,11 +1,13 @@
 mod multiline;
 
+use circular_queue::CircularQueue;
 use ncurses::*;
 use multiline::MultiLine;
 
 const NORMAL_TEXT: i16 = 1;
 const GREEN_TEXT: i16 = 2;
 const RED_TEXT: i16 = 3;
+const HIGHLIGHTED_NORMAL_TEXT: i16 = 4;
 
 /*
  * kinda initializes the curses screen, colors, etc
@@ -18,6 +20,7 @@ fn init() {
 
     start_color();
     init_pair(NORMAL_TEXT, COLOR_WHITE, COLOR_BLACK);
+    init_pair(HIGHLIGHTED_NORMAL_TEXT, COLOR_BLACK, COLOR_WHITE);
     init_pair(GREEN_TEXT, COLOR_GREEN, COLOR_BLACK);
     init_pair(RED_TEXT, COLOR_RED, COLOR_BLACK);
 
@@ -43,32 +46,40 @@ fn initialize_windows() -> (WINDOW, WINDOW) {
     (input_window, text_window)
 }
 
-fn load_multiline() -> MultiLine {
-    let line_length = COLS() - 2; // border duh
+fn load_multiline(line_length: i32) -> MultiLine {
     let text = "hello world my name is yotam and I love cookies I work at nistec and I dont know what am I doing with my life.".to_string();
 
     let m = MultiLine::new(text, line_length);
     m
 }
 
-fn draw(m: &MultiLine, win: WINDOW) {
+fn draw(m: &MultiLine, multiline_index: usize, win: WINDOW) {
+
+    // draw characters
     for i in 0..m.len() {
         let sc = m.get(i);
-        wattron(win, COLOR_PAIR(sc.color));
+
+        wattron(win, COLOR_PAIR(if i == multiline_index {HIGHLIGHTED_NORMAL_TEXT} else {sc.color}));
+
         mvwaddch(win, 1+sc.position.0, 1+sc.position.1, sc.character);
     }
+
     wrefresh(win);
 }
 
 fn main() {
     init();
     let (_input_window, text_window) = initialize_windows();
+    let line_length: i32 = COLS() - 2;
 
-    let mut multiline = load_multiline();
+    let mut multiline = load_multiline(line_length);
     let mut multiline_index = 0;
+
+    let mut input_queue: CircularQueue<u32> = CircularQueue::with_capacity(line_length as usize);
+
     let mut finished = false;
 
-    draw(&multiline, text_window);
+    draw(&multiline, multiline_index, text_window);
     loop {
 
         match getch() {
@@ -97,7 +108,7 @@ fn main() {
                 }
             }
         }
-        draw(&multiline, text_window);
+        draw(&multiline, multiline_index, text_window);
         if finished {break;};
     }
 
