@@ -36,7 +36,11 @@ impl MultiLine {
         self.characters.len()
     }
 
-    pub fn get(&self, index: usize) -> ScreenChar {
-        self.characters[index]
+    pub fn get(&self, index: usize) -> &ScreenChar {
+        &self.characters[index]
+    }
+
+    pub fn get_mut(&mut self, index: usize) -> &mut ScreenChar {
+        &mut self.characters[index]
     }
 }

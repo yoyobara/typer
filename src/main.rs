@@ -63,14 +63,9 @@ fn main() {
             KEY_F1 | 27 => {
                 break;
             }
-
-            // whitespace
-            32 => {
-            }
             
             // rest of characters
             _ => {
-
             }
         }
 
