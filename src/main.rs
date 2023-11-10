@@ -35,9 +35,11 @@ fn initialize_windows() -> (WINDOW, WINDOW) {
     let text_window = newwin(LINES() - 3, COLS(), 3, 0);
 
     wborder(input_window, 0, 0, 0, 0, 0, 0, 0, 0);
+    mvwaddstr(input_window, 0, 1, "INPUT");
 
     wattron(text_window, COLOR_PAIR(COLOR_GREEN));
     wborder(text_window, 0, 0, 0, 0, 0, 0, 0, 0);
+    mvwaddstr(text_window, 0, 1, "TEXT");
     wattroff(text_window, COLOR_PAIR(COLOR_GREEN));
 
     wrefresh(input_window);
@@ -66,6 +68,11 @@ fn draw(m: &MultiLine, multiline_index: usize, input_queue: &CircularQueue<u32>,
         mvwaddch(text_window, 1+sc.position.0, 1+sc.position.1, sc.character);
     }
     wrefresh(text_window);
+
+    // clear input window
+    for i in 0..(getmaxx(input_window) - 2) {
+        mvwaddch(input_window, 1, i + 1, 32);
+    }
 
     // draw input window
     for (i, ch) in input_queue.iter().rev().enumerate() {
@@ -110,7 +117,11 @@ fn main() {
                 multiline_index += 1;
 
                 // add to input queue
-                input_queue.push(ch as u32);
+                if ch == 32 {
+                    input_queue.clear();
+                } else {
+                    input_queue.push(ch as u32);
+                }
 
                 if multiline_index == multiline.len() {
                     finished = true;   
