@@ -1,4 +1,4 @@
-use crate::NORMAL_TEXT;
+use crate::{NORMAL_TEXT, GREEN_TEXT, RED_TEXT};
 
 #[derive(Copy, Clone)]
 pub struct ScreenChar {
@@ -46,5 +46,29 @@ impl MultiLine {
 
     pub fn get_mut(&mut self, index: usize) -> &mut ScreenChar {
         &mut self.characters[index]
+    }
+
+    /*
+     * counts how many full-green words are there
+     */
+    pub fn count_full_words(&self) -> i32 {
+
+        let mut words = 0;
+        let mut ok = true;
+
+        for sc in &self.characters {
+            if sc.character == 32 {
+                if ok {words += 1};
+                ok = true;
+            }          
+            else if sc.color != GREEN_TEXT {
+                ok = false;
+            }
+        }
+
+        // handle last word
+        if ok { words += 1; }
+
+        words // make last word count too last word
     }
 }

@@ -3,6 +3,7 @@ mod multiline;
 use circular_queue::CircularQueue;
 use ncurses::*;
 use multiline::MultiLine;
+use std::time::{ Instant, Duration };
 
 const NORMAL_TEXT: i16 = 1;
 const GREEN_TEXT: i16 = 2;
@@ -81,6 +82,12 @@ fn draw(m: &MultiLine, multiline_index: usize, input_queue: &CircularQueue<u32>,
     wrefresh(input_window);
 }
 
+fn calculate_wpm(m: &MultiLine, dur: Duration) -> f64 {
+    getch();
+    let minutes_elapsed = dur.as_secs_f64() / 60.0;
+    m.count_full_words() as f64 / minutes_elapsed
+}
+
 fn main() {
     init();
     let (input_window, text_window) = initialize_windows();
@@ -89,8 +96,10 @@ fn main() {
     let mut multiline_index = 0;
 
     let mut input_queue: CircularQueue<u32> = CircularQueue::with_capacity((getmaxx(input_window) - 2) as usize);
-
     let mut finished = false;
+
+    let mut wpm: Option<f64> = None;
+    let mut start_time: Option<Instant> = None;
 
     draw(&multiline, multiline_index, &input_queue, text_window, input_window);
     loop {
@@ -116,7 +125,7 @@ fn main() {
 
                 multiline_index += 1;
 
-                // add to input queue
+                // if space add to words count, clear queue.
                 if ch == 32 {
                     input_queue.clear();
                 } else {
@@ -129,8 +138,20 @@ fn main() {
 
             }
         }
+        
+        // check if started rn
+        if start_time.is_none() {
+            start_time = Some(Instant::now());
+        }
+
+        // draw screen
         draw(&multiline, multiline_index, &input_queue, text_window, input_window);
-        if finished {break;};
+    
+        // if finish calculate wpm and break
+        if finished {
+            wpm = Some(calculate_wpm(&multiline, start_time.unwrap().elapsed()));
+            break;
+        };
     }
 
     delwin(input_window);
@@ -138,6 +159,6 @@ fn main() {
     endwin();
     
     if finished {
-        println!("SUCCESS!!");
+        println!("SUCCESS with {} words per minute!", wpm.unwrap());
     }
 }
