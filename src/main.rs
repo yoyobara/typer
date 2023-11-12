@@ -5,6 +5,7 @@ use circular_queue::CircularQueue;
 use ncurses::*;
 use multiline::MultiLine;
 use std::time::{ Instant, Duration };
+use config::load_config;
 
 const NORMAL_TEXT: i16 = 1;
 const GREEN_TEXT: i16 = 2;
@@ -51,7 +52,8 @@ fn initialize_windows() -> (WINDOW, WINDOW) {
 }
 
 fn load_multiline(line_length: i32) -> MultiLine {
-    let text = "hello world".to_string();
+    let simple_config = load_config();
+    let text = simple_config.text;
 
     let m = MultiLine::new(text, line_length);
     m
