@@ -50,7 +50,7 @@ fn initialize_windows() -> (WINDOW, WINDOW) {
 }
 
 fn load_multiline(line_length: i32) -> MultiLine {
-    let text = "hello world my name is yotam and I love cookies I work at nistec and I dont know what am I doing with my life.".to_string();
+    let text = "hello world".to_string();
 
     let m = MultiLine::new(text, line_length);
     m
@@ -83,7 +83,6 @@ fn draw(m: &MultiLine, multiline_index: usize, input_queue: &CircularQueue<u32>,
 }
 
 fn calculate_wpm(m: &MultiLine, dur: Duration) -> f64 {
-    getch();
     let minutes_elapsed = dur.as_secs_f64() / 60.0;
     m.count_full_words() as f64 / minutes_elapsed
 }
