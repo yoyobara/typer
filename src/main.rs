@@ -1,4 +1,5 @@
 mod multiline;
+mod config;
 
 use circular_queue::CircularQueue;
 use ncurses::*;

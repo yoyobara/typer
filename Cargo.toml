@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 circular-queue = "0.2.3"
 ncurses = "5.101.0"
+toml = "0.8.8"
