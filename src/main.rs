@@ -5,7 +5,7 @@ use circular_queue::CircularQueue;
 use ncurses::*;
 use multiline::MultiLine;
 use std::time::{ Instant, Duration };
-use config::load_config;
+use config::{Config, load_config};
 
 const NORMAL_TEXT: i16 = 1;
 const GREEN_TEXT: i16 = 2;
@@ -51,9 +51,8 @@ fn initialize_windows() -> (WINDOW, WINDOW) {
     (input_window, text_window)
 }
 
-fn load_multiline(line_length: i32) -> MultiLine {
-    let simple_config = load_config();
-    let text = simple_config.text;
+fn load_multiline(line_length: i32, config: &Config) -> MultiLine {
+    let text = &config.text;
 
     let m = MultiLine::new(text, line_length);
     m
@@ -91,10 +90,12 @@ fn calculate_wpm(m: &MultiLine, dur: Duration) -> f64 {
 }
 
 fn main() {
+    let config = load_config();
+
     init();
     let (input_window, text_window) = initialize_windows();
 
-    let mut multiline = load_multiline(getmaxx(text_window) - 2);
+    let mut multiline = load_multiline(getmaxx(text_window) - 2, &config);
     let mut multiline_index = 0;
 
     let mut input_queue: CircularQueue<u32> = CircularQueue::with_capacity((getmaxx(input_window) - 2) as usize);

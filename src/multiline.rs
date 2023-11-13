@@ -1,4 +1,4 @@
-use crate::{NORMAL_TEXT, GREEN_TEXT, RED_TEXT};
+use crate::{NORMAL_TEXT, GREEN_TEXT};
 
 #[derive(Copy, Clone)]
 pub struct ScreenChar {
@@ -12,7 +12,7 @@ pub struct MultiLine {
 } 
 
 impl MultiLine {
-    pub fn new(text: String, line_length: i32) -> MultiLine {
+    pub fn new(text: &String, line_length: i32) -> MultiLine {
         let mut v: Vec<ScreenChar> = Vec::with_capacity(text.chars().count());
 
         let mut sc = ScreenChar {character: 0, position: (0, 0), color: NORMAL_TEXT};
