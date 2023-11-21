@@ -7,7 +7,7 @@ pub struct Config {
 }
 
 const CONFIG_PATH_NAME: &str = "typer.toml";
-const DEFAULT_TEXT: &str = "hello world, this is a sample text.\n want your own?\ncreate a config file!";
+const DEFAULT_TEXT: &str = "hello world, this is a sample text. want your own? create a config file!";
 
 // read the toml config. might fail if not readable for some reason
 fn read_toml() -> Result<Config, ()>{
@@ -18,7 +18,19 @@ fn read_toml() -> Result<Config, ()>{
     Ok(Config{ text: text.to_string() })
 }
 
+// check and fix the config if it has any textual errors
+fn check_and_fix_config(config: &mut Config) {
+    config.text = config.text.replace("hey", "brother");
+}
+
 // load the config
 pub fn load_config() -> Config {
-    read_toml().unwrap_or(Config { text: DEFAULT_TEXT.to_string() })
+    let conf = read_toml();
+    match conf {
+        Ok(mut ex) => {
+            check_and_fix_config(&mut ex);
+            ex
+        },
+        Err(()) => Config { text: DEFAULT_TEXT.to_string() },
+    }
 }

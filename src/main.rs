@@ -160,6 +160,6 @@ fn main() {
     endwin();
     
     if finished {
-        println!("SUCCESS with {} words per minute!", wpm.unwrap());
+        println!("SUCCESS with {:.*} words per minute!", 2, wpm.unwrap());
     }
 }
