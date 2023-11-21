@@ -51,10 +51,8 @@ fn initialize_windows() -> (WINDOW, WINDOW) {
     (input_window, text_window)
 }
 
-fn load_multiline(line_length: i32, config: &Config) -> MultiLine {
-    let text = &config.text;
-
-    let m = MultiLine::new(text, line_length);
+fn load_multiline(line_length: i32, config: Config) -> MultiLine {
+    let m = MultiLine::new(config.text, line_length);
     m
 }
 
@@ -95,7 +93,7 @@ fn main() {
     init();
     let (input_window, text_window) = initialize_windows();
 
-    let mut multiline = load_multiline(getmaxx(text_window) - 2, &config);
+    let mut multiline = load_multiline(getmaxx(text_window) - 2, config);
     let mut multiline_index = 0;
 
     let mut input_queue: CircularQueue<u32> = CircularQueue::with_capacity((getmaxx(input_window) - 2) as usize);

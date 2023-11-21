@@ -12,7 +12,7 @@ pub struct MultiLine {
 } 
 
 impl MultiLine {
-    pub fn new(text: &String, line_length: i32) -> MultiLine {
+    pub fn new(text: String, line_length: i32) -> MultiLine {
         let mut v: Vec<ScreenChar> = Vec::with_capacity(text.chars().count());
 
         let mut sc = ScreenChar {character: 0, position: (0, 0), color: NORMAL_TEXT};
