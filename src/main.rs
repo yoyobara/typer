@@ -37,13 +37,17 @@ fn initialize_windows() -> (WINDOW, WINDOW) {
     let input_window = newwin(3, COLS(), 0, 0);
     let text_window = newwin(LINES() - 3, COLS(), 3, 0);
 
+    wattron(input_window, A_BOLD());
     wborder(input_window, 0, 0, 0, 0, 0, 0, 0, 0);
     mvwaddstr(input_window, 0, 1, "INPUT");
+    wattroff(input_window, A_BOLD());
 
+    wattron(text_window, A_BOLD());
     wattron(text_window, COLOR_PAIR(COLOR_GREEN));
     wborder(text_window, 0, 0, 0, 0, 0, 0, 0, 0);
     mvwaddstr(text_window, 0, 1, "TEXT");
     wattroff(text_window, COLOR_PAIR(COLOR_GREEN));
+    wattroff(text_window, A_BOLD());
 
     wrefresh(input_window);
     wrefresh(text_window);
