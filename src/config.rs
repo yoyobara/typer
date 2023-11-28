@@ -1,5 +1,6 @@
 use std::{fs, str::FromStr};
 use toml::Table;
+use regex::Regex;
 
 // a simple struct representing the configuration.
 pub struct Config {
@@ -20,7 +21,9 @@ fn read_toml() -> Result<Config, ()>{
 
 // check and fix the config if it has any textual errors
 fn check_and_fix_text(config_text: &mut String) {
-    *config_text = config_text.trim().to_string();
+    let pattern: Regex = Regex::new(r"\s+").unwrap();
+
+    *config_text = pattern.replace_all(&config_text, " ").trim().to_string();
 }
 
 // load the config
