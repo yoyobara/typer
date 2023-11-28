@@ -19,8 +19,8 @@ fn read_toml() -> Result<Config, ()>{
 }
 
 // check and fix the config if it has any textual errors
-fn check_and_fix_config(config: &mut Config) {
-    config.text = config.text.replace("hey", "brother");
+fn check_and_fix_text(config_text: &mut String) {
+    *config_text = config_text.trim().to_string();
 }
 
 // load the config
@@ -28,7 +28,7 @@ pub fn load_config() -> Config {
     let conf = read_toml();
     match conf {
         Ok(mut ex) => {
-            check_and_fix_config(&mut ex);
+            check_and_fix_text(&mut ex.text);
             ex
         },
         Err(()) => Config { text: DEFAULT_TEXT.to_string() },
