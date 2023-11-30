@@ -92,7 +92,7 @@ fn calculate_wpm(m: &MultiLine, dur: Duration) -> f64 {
 }
 
 fn main() {
-    let config = load_config();
+    let config = load_config().unwrap();
 
     init();
     let (input_window, text_window) = initialize_windows();

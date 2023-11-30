@@ -1,1 +1,4 @@
-text = "  hey   brother"
+method = "language"
+
+language = ["wow", "mrow", "pow"]
+length = 5
